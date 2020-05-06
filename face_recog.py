@@ -26,44 +26,41 @@ def show_eigenfaces(pca):
 	plt.show()
 
 
-## Step 1: Read dataset and visualize it
+## Step 1: Read dataset and visualize it.
 df = pd.read_csv("face_data.csv")
-targets = df["target"]
-pixels = df.drop(["target"],axis=1)
-
-print np.array(pixels).shape
+# print(df.head())
+labels = df['target']
+pixels = df.drop(['target'], axis=1)
 
 show_orignal_images(pixels)
+
 ## Step 2: Split Dataset into training and testing
-x_train, x_test, y_train, y_test = train_test_split(pixels, targets)
+x_train, x_test, y_train, y_test = train_test_split(pixels, labels)
 
 ## Step 3: Perform PCA.
-pca = PCA(n_components=150).fit(x_train)
+pca = PCA(n_components=135).fit(x_train)
+
 plt.plot(np.cumsum(pca.explained_variance_ratio_))
 plt.xlabel('number of components')
-plt.ylabel('cumulative explained variance');
+plt.ylabel('cumulative explained variance')
 plt.show()
-
 show_eigenfaces(pca)
 
 ## Step 4: Project Training data to PCA
 print("Projecting the input data on the eigenfaces orthonormal basis")
-Xtrain_pca = pca.transform(x_train)
+x_train_pca = pca.transform(x_train)
 
 ##############
 
 ## Step 5: Initialize Classifer and fit training data
-clf = SVC(kernel='rbf',C=1000,gamma=0.001)
-clf = clf.fit(Xtrain_pca, y_train)
-
+clf = SVC(kernel='rbf', C=1000, gamma=0.01)
+clf = clf.fit(x_train_pca, y_train)
 
 ## Step 6: Perform testing and get classification report
 print("Predicting people's names on the test set")
 t0 = time()
-Xtest_pca = pca.transform(x_test)
-y_pred = clf.predict(Xtest_pca)
+x_test_pca = pca.transform(x_test)
+y_pred = clf.predict(x_test_pca)
 print("done in %0.3fs" % (time() - t0))
 print(classification_report(y_test, y_pred))
-
-
 
