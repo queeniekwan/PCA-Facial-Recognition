@@ -28,7 +28,8 @@ def show_eigenfaces(pca):
 
 ## Step 1: Read dataset and visualize it.
 df = pd.read_csv("face_data.csv")
-# print(df.head())
+print(df.head(12))
+
 labels = df['target']
 pixels = df.drop(['target'], axis=1)
 
@@ -52,7 +53,7 @@ x_train_pca = pca.transform(x_train)
 
 ##############
 
-## Step 5: Initialize Classifer and fit training data
+## Step 5: Initialize Classifier and fit training data
 clf = SVC(kernel='rbf', C=1000, gamma=0.01)
 clf = clf.fit(x_train_pca, y_train)
 
